@@ -8,6 +8,7 @@ public class WebCompraConciertos implements IOperacionesWeb {
 	private int numeroDeEntradasDisponibles;//aqui es private lo he cambiado a publico para probar una cosa
 	private int entradas;
 
+	private int entradasVendidas = 0;
 	// Constructor de la clase
 	public WebCompraConciertos() {
 		super();
@@ -18,13 +19,14 @@ public class WebCompraConciertos implements IOperacionesWeb {
 	// Implementación del método para comprar una entrada
 	@Override
 	public synchronized boolean comprarEntrada() {
-		if (entradas > 0){
+		if (entradas > 0 && entradas <=EjemploTicketMaster.MAX_ENTRADAS_POR_FAN){
 			entradas--;
-			mensajeWeb("Entrada comprada, quedan: "+entradas);
+			entradasVendidas++;
+			mensajeWeb("Entrada comprada, queda: "+entradas+" entradas");
 			return true;
 		}else {
 			try{
-				mensajeWeb("No quedan entradas disponibles ");
+				mensajeWeb("No quedan entradas disponibles, espera a que el promotor suba mas entradas");
 				wait();
 			} catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -52,32 +54,35 @@ public class WebCompraConciertos implements IOperacionesWeb {
 
 	// Implementación del método para cerrar la venta
 	@Override
-	public void cerrarVenta() {
+	public synchronized void cerrarVenta() {
+
 		// TODO Auto-generated method stub
-		mensajeWeb("Se ha cerrado la venta de entradas ya no queda nada");
-		mensajeWeb("Ventana cerrada");
-		notifyAll();
+			mensajeWeb("Se ha cerrado la venta de entradas ya que todos los fans han comprado el máximo");
+			mensajeWeb("Ventana cerrada. Gracias por comprar");
+			entradas = EjemploTicketMaster.TOTAL_ENTRADAS-entradasVendidas;
+
+
+			notify();
+
+
 
 	}
 
 	// Implementación del método para verificar si hay entradas disponibles
 	@Override
 	public boolean hayEntradas() {
-		/*if (entradas>0){
-			mensajeWeb("Hay entradas disponibles");
+		if (entradas>0){
 			return true;
 		}else{
-			mensajeWeb("No hay entradas disponibles");
 		return false;
-		}*/
-		return entradas > 0;
+		}
 	}
 
 	// Implementación del método para obtener el número de entradas restantes
 	@Override
 	public int entradasRestantes() {
 		// TODO Auto-generated method stub
-		//mensajeWeb("Actualmente quedan "+numeroDeEntradasDisponibles+" entradas disponibles. Corre que se agotan");
+		mensajeWeb("Actualmente quedan "+numeroDeEntradasDisponibles+" entradas disponibles. Corre que se agotan");
 		return entradas;
 	}
 

@@ -20,13 +20,15 @@ public class PromotoraConciertos extends Thread {
 
 		int entrdasRepuestas = 0;
 		Random random = new Random();
-		while (entrdasRepuestas < EjemploTicketMaster.TOTAL_ENTRADAS) {
+		while (entrdasRepuestas < EjemploTicketMaster.TOTAL_ENTRADAS && entrdasRepuestas<(EjemploTicketMaster.MAX_ENTRADAS_POR_FAN*EjemploTicketMaster.NUM_FANS)) {
 			synchronized (webCompra) {
 				if (!webCompra.hayEntradas()) {
 					//int entradasReponer = EjemploTicketMaster.REPOSICION_ENTRADAS;
 					int entradasRepuestasNuevas = webCompra.reponerEntradas(EjemploTicketMaster.REPOSICION_ENTRADAS);
 					entrdasRepuestas+=entradasRepuestasNuevas;
-					mensajePromotor("Se ha repuesto "+entradasRepuestasNuevas+" y total repuestas "+entrdasRepuestas);
+					mensajePromotor("Se ha repuesto "+entradasRepuestasNuevas+" entradas y total de entradas" +
+							" repuestas "+entrdasRepuestas+" de las "+EjemploTicketMaster.TOTAL_ENTRADAS+" " +
+							" entradas totales que hay previstas vender");
 					/*mensajePromotor("El promotor acaba de reponer entradas. Quedan " +
 							webCompra.entradasRestantes() + " entradas disponibles. Se repusieron " +
 							entradasRepuestasNuevas + " entradas.");*/
@@ -38,16 +40,19 @@ public class PromotoraConciertos extends Thread {
 				int tiempo = random.nextInt(5000) + 3000;
 				Thread.sleep(tiempo);
 			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();//saber que hilo le ha despertado
+				Thread.currentThread().interrupt();
 				break;
 			}
 		}
 
 		// Al finalizar la venta, cerramos la venta
-		synchronized (webCompra) {
-			webCompra.cerrarVenta();
-			webCompra.notifyAll();
-		}
+		
+			synchronized (webCompra) {
+				webCompra.cerrarVenta();
+				webCompra.notifyAll();
+			}
+
+
 	}
 
 

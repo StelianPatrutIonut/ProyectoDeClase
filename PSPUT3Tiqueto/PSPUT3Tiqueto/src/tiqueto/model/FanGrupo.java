@@ -21,72 +21,39 @@ public class FanGrupo extends Thread {
 		this.webCompra = web;
 
 	}
-	/*	@Override
-	public void run() {
-		while (entradasCompradas < EjemploTicketMaster.MAX_ENTRADAS_POR_FAN) {
-			synchronized (webCompra) {
-				if (webCompra.hayEntradas()) {
-					webCompra.comprarEntrada();
-					entradasCompradas++;
-					dimeEntradasCompradas();
-				} else {
-					try {
-						webCompra.wait(); // Espera a que el promotor reponga las entradas
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-						return;
-					}
-				}
-			}
-			try {
-				Thread.sleep((int) (Math.random() * 2000) + 1000); // Dormir entre 1 y 3 segundos
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				return;
-			}
-		}
 
-		synchronized (webCompra) {
-			if (--EjemploTicketMaster.NUM_FANS == 0) {
-				WebCompraConciertos.todosFansCompletos = true;
-				webCompra.notifyAll(); // Notificar que todos los fans han completado sus compras
-			}
-		}
-	}
-*/
 
 	// Método run que se ejecutará cuando se inicie el hilo
 	@Override
 	public void run() {
-
-				while (entradasCompradas <= EjemploTicketMaster.MAX_ENTRADAS_POR_FAN) {
-					synchronized (webCompra) {
-				if (webCompra.hayEntradas()) {
+		do {
+			synchronized (webCompra) {
+				if (webCompra.hayEntradas() && entradasCompradas < EjemploTicketMaster.MAX_ENTRADAS_POR_FAN) {
 					mensajeFan("Voy a intentar comprar una entrada, veremos qué pasa...");
 					webCompra.comprarEntrada();
 					entradasCompradas++;
-					//mensajeFan("¡Entrada comprada! El fan " + this.numeroFan + " ha comprado un total de: " + entradasCompradas);
 					dimeEntradasCompradas();
 				} else {
 					try {
-						//mensajeFan("Vaya no hay entradas actualmente, voy a esperar a que el promotor saque entradas para poder comprar entradas");
 						webCompra.wait();
 					} catch (InterruptedException e) {
 						throw new RuntimeException(e);
 					}
 				}
 			}
-			try{
+
+			try {
 				Thread.sleep((int) (Math.random() * 2000) + 1000); // Dormir entre 1 y 3 segundos
-			}catch (InterruptedException e){
-				Thread.currentThread().interrupt();
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();// avisar de que estas interrumpiendo el hilo
 				return;
 			}
 
-		}
+		} while (entradasCompradas < EjemploTicketMaster.MAX_ENTRADAS_POR_FAN);
 
 
 	}
+
 
 	// Método para imprimir la cantidad de entradas compradas por el fan
 	public void dimeEntradasCompradas() {
