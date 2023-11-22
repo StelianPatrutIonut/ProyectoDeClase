@@ -32,6 +32,7 @@ public class FanGrupo extends Thread {
 					mensajeFan("Voy a intentar comprar una entrada, veremos qué pasa...");
 					webCompra.comprarEntrada();
 					entradasCompradas++;
+					mensajeFan("Entrada comprada con exito!!");
 					dimeEntradasCompradas();
 				} else {
 					try {

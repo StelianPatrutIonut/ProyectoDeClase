@@ -19,7 +19,7 @@ public class WebCompraConciertos implements IOperacionesWeb {
 	// Implementación del método para comprar una entrada
 	@Override
 	public synchronized boolean comprarEntrada() {
-		if (entradas > 0 && entradas <=EjemploTicketMaster.MAX_ENTRADAS_POR_FAN){
+		if (entradas > 0 || entradas <=EjemploTicketMaster.MAX_ENTRADAS_POR_FAN){
 			entradas--;
 			entradasVendidas++;
 			mensajeWeb("Entrada comprada, queda: "+entradas+" entradas");
@@ -35,6 +35,7 @@ public class WebCompraConciertos implements IOperacionesWeb {
         }
 	}
 
+
 	// Implementación del método para reponer entradas
 	@Override
 	public synchronized int reponerEntradas(int numeroEntradas) {
@@ -43,13 +44,12 @@ public class WebCompraConciertos implements IOperacionesWeb {
 		/*	//numeroDeEntradasDisponibles-=numeroEntradas;
 			mensajeWeb("Se han repuesto las entradas, el promotor ha repuesto: " + numeroEntradas + " entradas");
 			mensajeWeb("Actualmente hay: " + entradas);*/
-			int entradasReponer = numeroEntradas;
+			int entradasReponer = Math.min(numeroEntradas, numeroDeEntradasDisponibles);
 			numeroDeEntradasDisponibles -= entradasReponer;
 			notifyAll();
 			return entradasReponer;
 		}
-		return  0;
-
+		return 0;
 	}
 
 	// Implementación del método para cerrar la venta

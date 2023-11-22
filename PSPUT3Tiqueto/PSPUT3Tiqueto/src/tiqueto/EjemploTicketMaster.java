@@ -10,16 +10,16 @@ import tiqueto.model.WebCompraConciertos;
 public class EjemploTicketMaster {
 
 	// Total de entradas que se venderán
-	public static int TOTAL_ENTRADAS = 10 ;
+	public static int TOTAL_ENTRADAS = 25 ;
 
 	// El número de entradas que repondrá cada vez el promotor
-	public static int REPOSICION_ENTRADAS = 2;
+	public static int REPOSICION_ENTRADAS = 13;// intentar qu funcione con 3
 
 	// El número máximo de entradas por fan
-	public static int MAX_ENTRADAS_POR_FAN = 5;
+	public static int MAX_ENTRADAS_POR_FAN = 2;
 
 	// El número total de fans
-	public static int NUM_FANS = 4;
+	public static int NUM_FANS = 7;
 
 	public static void main(String[] args) throws InterruptedException {
 
