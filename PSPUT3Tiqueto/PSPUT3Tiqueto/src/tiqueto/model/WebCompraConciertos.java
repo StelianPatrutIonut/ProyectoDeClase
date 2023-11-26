@@ -5,7 +5,7 @@ import tiqueto.IOperacionesWeb;
 
 public class WebCompraConciertos implements IOperacionesWeb {
 
-	private int numeroDeEntradasDisponibles;//aqui es private lo he cambiado a publico para probar una cosa
+	private int numeroDeEntradasDisponibles;
 	private int entradas;
 
 	private int entradasVendidas = 0;
